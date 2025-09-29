@@ -88,6 +88,19 @@ driod-demo1/
 └── tools/             # 开发工具
 ```
 
+## 🚨 **AI Agent工作必读**
+
+### **每次任务前必须检查**
+- 📋 **[QUICK_REFERENCE.md](./QUICK_REFERENCE.md)** - AI Agent快速参考指南
+- ✅ **[TASK_START_CHECKLIST.md](./TASK_START_CHECKLIST.md)** - 任务启动检查清单
+
+### **核心规范文档（强制遵守）**
+- 🎨 **[DESIGN_GUIDELINES.md](./DESIGN_GUIDELINES.md)** - 设计相关任务强制标准
+- 🤖 **[记录文档/AI_AGENT_WORK_PROTOCOL.md](./记录文档/AI_AGENT_WORK_PROTOCOL.md)** - AI工作协议
+- 🔍 **[design/specs/Code_Quality_Standards.md](./design/specs/Code_Quality_Standards.md)** - 代码质量标准
+
+---
+
 ## 🚀 快速开始
 
 ### 环境要求
