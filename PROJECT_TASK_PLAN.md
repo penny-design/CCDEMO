@@ -139,21 +139,21 @@ Requirements → UI Design System → Visual Prototypes → Technical Design →
 - [x] 分析边界情况和约束条件
 - [ ] **用户确认点**: Requirements审批
 
-**任务1.2: 用户流程设计 (2天)**
-- [ ] 绘制完整用户流程图 (Mermaid图)
-- [ ] 定义页面状态机 (P1/P2/P3状态转换)
-- [ ] 确定关键用户路径和异常流程
-- [ ] 创建 `design/Flowchart.md`
+**任务1.2: 用户流程设计 (2天)** ✅ **已完成**
+- [x] 绘制完整用户流程图 (Mermaid图)
+- [x] 定义页面状态机 (P1/P2/P3状态转换)
+- [x] 确定关键用户路径和异常流程
+- [x] 创建 `design/Flowchart.md`
 
-**任务1.3: 功能模块划分 (1天)**
-- [ ] 核心功能模块识别
-- [ ] 模块依赖关系分析
-- [ ] 技术难点和风险识别
+**任务1.3: 功能模块划分 (1天)** ✅ **已完成**
+- [x] 核心功能模块识别
+- [x] 模块依赖关系分析  
+- [x] 技术难点和风险识别
 
 **交付物**:
-- `.claude/specs/core-requirements/requirements.md`
-- `design/Flowchart.md` 
-- 功能模块划分文档
+- `.claude/specs/core-requirements/requirements.md` ✅
+- `design/Flowchart.md` ✅
+- `design/Module_Architecture.md` ✅ **功能模块划分文档**
 
 **里程碑**: 需求规格完成并审核通过
 
@@ -302,15 +302,22 @@ Requirements → UI Design System → Visual Prototypes → Technical Design →
 - [ ] 确认前端技术栈: Vite + Vanilla TS + TailwindCSS
 - [ ] 确认后端技术栈: Supabase (数据库、API、实时功能)
 - [ ] 确认部署方案: Vercel/Netlify
-- [ ] 确认第三方集成: WhatsApp Business API (模拟数据)
+- [ ] 确认核心第三方集成:
+  - [ ] WhatsApp Business API (模拟数据模式)
+  - [ ] **Google OAuth 2.0 API** (用户认证)
+  - [ ] **DiceBear Avatar API** (头像生成降级)
+  - [ ] **Google Analytics 4** (数据追踪)
 
 **任务4.2: 系统架构设计 (2天)**
-- [ ] 前端应用架构设计
+- [ ] 前端应用架构设计 (8个核心功能模块)
 - [ ] 状态管理架构 (基于状态机)
 - [ ] 组件架构 (基于设计系统)
-- [ ] 路由和页面管理
-- [ ] API接口设计
-- [ ] 数据模型设计
+- [ ] **双重认证架构** (Google OAuth + WhatsApp验证)
+- [ ] **多租户SaaS架构** (Row Level Security设计)
+- [ ] **头像管理架构** (多级降级策略)
+- [ ] **实时通信架构** (Supabase Realtime)
+- [ ] API接口设计 (RESTful + Realtime)
+- [ ] 数据模型设计 (多商家数据隔离)
 
 **任务4.3: 设计系统代码规划 (1天)**
 - [ ] CSS架构设计 (Tailwind + 自定义CSS)
@@ -333,10 +340,12 @@ Requirements → UI Design System → Visual Prototypes → Technical Design →
 
 ---
 
-### 💻 **阶段5：功能模块开发 (Week 8-12)**
+### 💻 **阶段5：功能模块开发 (Week 8-12) - 重新规划**
+
+#### **Phase 1: 核心基础模块 (Week 8-9)**
 
 #### **Spec 4: 设计系统代码实现 (design-system-code)**
-**时间**: Week 8 (5天)  
+**时间**: Week 8前半周 (3天)  
 **Spec命令**:
 ```bash
 /spec-create design-system-code "将设计系统转换为可复用的代码组件"
@@ -355,65 +364,204 @@ Requirements → UI Design System → Visual Prototypes → Technical Design →
 - [ ] 组件文档和使用示例
 - [ ] **代码质量自检**: 按照[Code_Quality_Standards.md](./design/specs/Code_Quality_Standards.md)执行完整检查
 
-#### **Spec 5: 页面状态管理 (page-state-management)**
-**时间**: Week 9 (5天)  
+#### **Spec 5: 双重认证系统 (dual-authentication)**
+**时间**: Week 8后半周 + Week 9前半周 (4天)  
 **Spec命令**:
 ```bash
-/spec-create page-state-management "实现复杂的页面状态管理逻辑"
+/spec-create dual-authentication "Google OAuth + WhatsApp双重验证集成"
 ```
 
 **任务内容**:
-- [ ] 状态机核心引擎实现
-- [ ] 页面状态定义和转换逻辑
-- [ ] 状态持久化 (localStorage)
-- [ ] 实时状态同步 (Supabase Realtime)
-- [ ] 错误状态处理和恢复
-- [ ] **代码质量自检**: 按照[Code_Quality_Standards.md](./design/specs/Code_Quality_Standards.md)执行完整检查
+- [ ] **Google OAuth 2.0集成**:
+  - [ ] Google登录SDK集成和配置
+  - [ ] 移动端H5兼容性处理
+  - [ ] 用户信息获取 (头像、姓名、邮箱、ID)
+  - [ ] 登录状态管理和错误处理
+- [ ] **WhatsApp验证集成**:
+  - [ ] SESSION_ID生成和管理机制
+  - [ ] WhatsApp URL Scheme跳转处理
+  - [ ] 预填消息格式和发送流程
+  - [ ] WhatsApp Business API模拟数据接口
+- [ ] **双重验证流程**:
+  - [ ] Google信息 + WhatsApp手机号关联绑定
+  - [ ] 激活状态实时监听 (Supabase Realtime)
+  - [ ] 验证异常情况处理和重试机制
+- [ ] **代码质量自检**: 完整检查
 
-#### **Spec 6: 用户激活系统 (user-activation)**
-**时间**: Week 10 (5天)  
+#### **Spec 6: 用户信息与头像管理 (user-profile-avatar)**
+**时间**: Week 9后半周 (2天)  
 **Spec命令**:
 ```bash
-/spec-create user-activation "WhatsApp集成和用户激活流程"
+/spec-create user-profile-avatar "多级头像降级策略和用户信息管理"
 ```
 
 **任务内容**:
-- [ ] Session ID生成和管理
-- [ ] WhatsApp API集成 (模拟数据模式)
-- [ ] 用户身份验证和绑定
-- [ ] 激活状态监听和更新
-- [ ] 错误处理和重试机制
-- [ ] **代码质量自检**: 按照[Code_Quality_Standards.md](./design/specs/Code_Quality_Standards.md)执行完整检查
+- [ ] **Google用户信息管理**:
+  - [ ] 用户信息存储和缓存机制
+  - [ ] Google头像优先显示策略
+  - [ ] 用户昵称和身份标识管理
+- [ ] **DiceBear头像生成集成**:
+  - [ ] DiceBear API集成和配置
+  - [ ] 头像生成参数和样式统一
+  - [ ] 头像缓存和预加载机制
+- [ ] **多级头像降级策略**:
+  - [ ] Google头像 → DiceBear → 虚拟头像 → 默认头像
+  - [ ] 头像加载失败处理和重试机制
+  - [ ] 跑马灯头像统一显示 (32px圆形)
+- [ ] **虚拟用户头像库**:
+  - [ ] 后台上传虚拟头像管理
+  - [ ] 头像样式统一配置
+  - [ ] 真实+虚拟头像混合显示策略
+- [ ] **代码质量自检**: 完整检查
 
-#### **Spec 7: 邀请裂变系统 (viral-invitation)**
-**时间**: Week 11 (5天)  
+#### **Phase 2: 病毒传播核心 (Week 10)**
+
+#### **Spec 7: 页面状态管理系统 (page-state-management)**
+**时间**: Week 10前半周 (2天)  
 **Spec命令**:
 ```bash
-/spec-create viral-invitation "病毒式邀请和奖励机制"
+/spec-create page-state-management "复杂页面状态机和状态同步"
 ```
 
 **任务内容**:
-- [ ] 专属邀请链接生成
-- [ ] 邀请关系追踪
-- [ ] 奖励计算和发放逻辑
-- [ ] 防刷机制 (IP限制、设备指纹)
-- [ ] 实时奖励通知
-- [ ] **代码质量自检**: 按照[Code_Quality_Standards.md](./design/specs/Code_Quality_Standards.md)执行完整检查
+- [ ] **状态机核心引擎**:
+  - [ ] 基于状态机的页面状态控制
+  - [ ] P1/P2/P3页面状态定义 (13个状态)
+  - [ ] 状态转换逻辑和触发条件
+- [ ] **状态持久化和恢复**:
+  - [ ] localStorage状态存储机制
+  - [ ] URL参数解析和状态恢复
+  - [ ] 页面刷新后状态一致性
+- [ ] **实时状态同步**:
+  - [ ] Supabase Realtime集成
+  - [ ] 邀请奖励实时更新机制
+  - [ ] 跨设备状态同步处理
+- [ ] **代码质量自检**: 完整检查
 
-#### **Spec 8: 抽奖兑奖系统 (lottery-redemption)**
+#### **Spec 8: 病毒式邀请传播系统 (viral-invitation)**
+**时间**: Week 10后半周 (3天)  
+**Spec命令**:
+```bash
+/spec-create viral-invitation "利他分享心理学和邀请裂变机制"
+```
+
+**任务内容**:
+- [ ] **邀请链接生成系统**:
+  - [ ] 专属邀请链接生成 (ref_id + Google昵称)
+  - [ ] 邀请关系追踪和管理
+  - [ ] 邀请链接安全性和防滥用
+- [ ] **一键WhatsApp分享**:
+  - [ ] WhatsApp群组分享功能
+  - [ ] WhatsApp个人联系人分享
+  - [ ] 分享流程用户体验优化
+- [ ] **利他分享CTA设计**:
+  - [ ] 常驻邀请CTA/Toast实现
+  - [ ] "送好友抽奖码"心理学文案
+  - [ ] 邀请成功奖励反馈机制
+- [ ] **实时邀请动态**:
+  - [ ] 跑马灯实时显示邀请动态
+  - [ ] Google头像 + 姓名格式展示
+  - [ ] 真实+虚拟数据混合展示
+- [ ] **代码质量自检**: 完整检查
+
+#### **Phase 3: 抽奖与兑奖 (Week 11)**
+
+#### **Spec 9: 抽奖码与奖励管理 (lottery-reward-management)**
+**时间**: Week 11前半周 (2天)  
+**Spec命令**:
+```bash
+/spec-create lottery-reward-management "抽奖码分配和奖励计算系统"
+```
+
+**任务内容**:
+- [ ] **抽奖码管理系统**:
+  - [ ] 抽奖码生成和分配逻辑
+  - [ ] 用户抽奖码数量实时计算
+  - [ ] 抽奖码列表展示和管理
+- [ ] **邀请奖励计算**:
+  - [ ] 每邀请1人获得1个抽奖码规则
+  - [ ] 奖励发放触发条件 (关注WhatsApp商业号)
+  - [ ] 奖励计算防刷和去重机制
+- [ ] **实时奖励反馈**:
+  - [ ] Supabase Realtime奖励通知
+  - [ ] +1动画效果和Toast通知
+  - [ ] WhatsApp机器人模板消息通知
+- [ ] **代码质量自检**: 完整检查
+
+#### **Spec 10: 抽奖算法与多元化兑奖 (lottery-multi-redemption)**
+**时间**: Week 11后半周 (3天)  
+**Spec命令**:
+```bash
+/spec-create lottery-multi-redemption "公平抽奖算法和三种兑奖方式"
+```
+
+**任务内容**:
+- [ ] **公平抽奖算法**:
+  - [ ] 中奖结果计算和存储
+  - [ ] 分等级抽奖逻辑实现
+  - [ ] 抽奖结果透明化展示
+- [ ] **中奖结果展示**:
+  - [ ] 中奖/未中奖状态页面实现
+  - [ ] 分等级中奖者公示功能
+  - [ ] 头像+脱敏昵称展示
+- [ ] **三种兑奖方式实现**:
+  - [ ] **方式1**: 实物奖品收件信息表单系统
+  - [ ] **方式2**: 虚拟奖品兑换码直接显示
+  - [ ] **方式3**: WhatsApp个人号兑奖引导流程
+- [ ] **兑奖安全机制**:
+  - [ ] 安全兑奖Token生成和验证
+  - [ ] Token透明展示和复制功能
+  - [ ] 防重复领取和链接滥用
+- [ ] **客服支持集成**:
+  - [ ] 悬浮客服按钮常驻
+  - [ ] WhatsApp客服一键联系
+  - [ ] 标准话术模板和用户引导
+- [ ] **代码质量自检**: 完整检查
+
+#### **Phase 4: 多商家后台管理 (Week 12)**
+
+#### **Spec 11: 多租户SaaS后台管理 (multi-tenant-admin)**
 **时间**: Week 12 (5天)  
 **Spec命令**:
 ```bash
-/spec-create lottery-redemption "抽奖算法和兑奖流程"
+/spec-create multi-tenant-admin "SaaS级多商家后台管理系统"
 ```
 
 **任务内容**:
-- [ ] 公平抽奖算法实现
-- [ ] 中奖结果计算和存储
-- [ ] 安全兑奖令牌生成
-- [ ] 动态表单系统 (实物/虚拟奖品)
-- [ ] 兑奖信息验证和处理
-- [ ] **代码质量自检**: 按照[Code_Quality_Standards.md](./design/specs/Code_Quality_Standards.md)执行完整检查
+- [ ] **多租户权限系统**:
+  - [ ] Supabase Row Level Security (RLS) 配置
+  - [ ] 多商家数据完全隔离
+  - [ ] 角色权限管理 (超级管理员/商家管理员/运营人员)
+  - [ ] 账户注册审核和登录认证
+- [ ] **活动配置管理**:
+  - [ ] 活动基础信息配置界面
+  - [ ] 奖品管理系统 (增删改、等级配置)
+  - [ ] 活动时间和规则设置
+  - [ ] 赞助商信息配置
+- [ ] **视觉内容管理系统**:
+  - [ ] Banner图片上传和管理
+  - [ ] 奖品图片批量上传和预览
+  - [ ] 虚拟用户头像库管理
+  - [ ] 图片格式验证和压缩优化
+- [ ] **跑马灯消息配置**:
+  - [ ] 自定义跑马灯消息模板
+  - [ ] 虚拟数据和真实数据混合配置
+  - [ ] 消息显示频率和效果预览
+- [ ] **WhatsApp多商家集成**:
+  - [ ] 不同商家配置不同WhatsApp商业号
+  - [ ] 客服个人号配置管理
+  - [ ] 模板消息内容自定义
+- [ ] **Google Analytics 4集成**:
+  - [ ] GA4追踪代码配置
+  - [ ] 事件埋点管理界面
+  - [ ] 自定义维度配置
+  - [ ] 数据报告模板提供
+- [ ] **中奖者管理系统**:
+  - [ ] 中奖记录列表和筛选
+  - [ ] 兑奖状态管理和跟踪
+  - [ ] 中奖者信息导出功能
+  - [ ] 敏感信息脱敏显示
+- [ ] **代码质量自检**: 完整检查
 
 ---
 
