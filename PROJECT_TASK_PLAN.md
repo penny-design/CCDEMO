@@ -311,6 +311,7 @@ Requirements → UI Design System → Visual Prototypes → Technical Design →
 - [ ] 响应式网格系统
 - [ ] 动画和过渡效果
 - [ ] 组件文档和使用示例
+- [ ] **代码质量自检**: 按照[Code_Quality_Standards.md](./design/specs/Code_Quality_Standards.md)执行完整检查
 
 #### **Spec 5: 页面状态管理 (page-state-management)**
 **时间**: Week 9 (5天)  
@@ -325,6 +326,7 @@ Requirements → UI Design System → Visual Prototypes → Technical Design →
 - [ ] 状态持久化 (localStorage)
 - [ ] 实时状态同步 (Supabase Realtime)
 - [ ] 错误状态处理和恢复
+- [ ] **代码质量自检**: 按照[Code_Quality_Standards.md](./design/specs/Code_Quality_Standards.md)执行完整检查
 
 #### **Spec 6: 用户激活系统 (user-activation)**
 **时间**: Week 10 (5天)  
@@ -339,6 +341,7 @@ Requirements → UI Design System → Visual Prototypes → Technical Design →
 - [ ] 用户身份验证和绑定
 - [ ] 激活状态监听和更新
 - [ ] 错误处理和重试机制
+- [ ] **代码质量自检**: 按照[Code_Quality_Standards.md](./design/specs/Code_Quality_Standards.md)执行完整检查
 
 #### **Spec 7: 邀请裂变系统 (viral-invitation)**
 **时间**: Week 11 (5天)  
@@ -353,6 +356,7 @@ Requirements → UI Design System → Visual Prototypes → Technical Design →
 - [ ] 奖励计算和发放逻辑
 - [ ] 防刷机制 (IP限制、设备指纹)
 - [ ] 实时奖励通知
+- [ ] **代码质量自检**: 按照[Code_Quality_Standards.md](./design/specs/Code_Quality_Standards.md)执行完整检查
 
 #### **Spec 8: 抽奖兑奖系统 (lottery-redemption)**
 **时间**: Week 12 (5天)  
@@ -367,6 +371,7 @@ Requirements → UI Design System → Visual Prototypes → Technical Design →
 - [ ] 安全兑奖令牌生成
 - [ ] 动态表单系统 (实物/虚拟奖品)
 - [ ] 兑奖信息验证和处理
+- [ ] **代码质量自检**: 按照[Code_Quality_Standards.md](./design/specs/Code_Quality_Standards.md)执行完整检查
 
 ---
 
@@ -384,12 +389,14 @@ Requirements → UI Design System → Visual Prototypes → Technical Design →
 - [ ] 跨浏览器兼容性测试
 - [ ] 移动端测试
 - [ ] 性能测试和优化
+- [ ] **代码质量自检**: 集成测试代码质量检查
 
 **任务6.2: 管理后台开发 (4天)**
 - [ ] 活动配置界面实现
 - [ ] 数据统计和分析面板
 - [ ] 用户和中奖者管理
 - [ ] 系统配置和维护工具
+- [ ] **代码质量自检**: 管理后台代码质量检查
 
 **任务6.3: 部署和发布 (3天)**
 - [ ] 生产环境配置
