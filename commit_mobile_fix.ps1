@@ -1,17 +1,17 @@
-# Simple commit for Day 2 test environment
+# Commit mobile layout fixes
 $gitRegistry = Get-ItemProperty "HKLM:\SOFTWARE\GitForWindows" -ErrorAction SilentlyContinue
 if ($gitRegistry) {
     $gitExe = Join-Path $gitRegistry.InstallPath "bin\git.exe"
     
-    Write-Host "Adding files..."
+    Write-Host "Adding mobile layout fixes..."
     & $gitExe add .
     
     Write-Host "Creating commit..."
-    $commitMsg = "Add Day 2 mobile test environment and tools"
+    $commitMsg = "Fix mobile layout spacing issues in P1 prototype"
     & $gitExe commit -m $commitMsg
     
     Write-Host "Push to remote..."
     & $gitExe push origin main
     
-    Write-Host "Commit completed!"
+    Write-Host "Mobile layout fixes committed!"
 }

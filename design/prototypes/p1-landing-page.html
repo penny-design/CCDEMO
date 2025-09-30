@@ -463,6 +463,18 @@
             
             .cta-wrap {
                 padding: 12px;
+                margin-bottom: 16px; /* 修复：CTA区域与下方内容间距 */
+            }
+            
+            .participation-stats {
+                margin-bottom: 20px; /* 修复：参与统计区域间距 */
+                flex-direction: column;
+                gap: 8px;
+                align-items: center;
+            }
+            
+            .card {
+                margin: 16px 0; /* 修复：卡片组件间距优化 */
             }
             
             .footer-links {
@@ -474,6 +486,18 @@
         @media (min-width: 375px) and (max-width: 414px) {
             .container {
                 padding: 0 12px;
+            }
+            
+            .cta-wrap {
+                margin-bottom: 20px; /* 修复：标准移动设备CTA区域间距 */
+            }
+            
+            .participation-stats {
+                margin-bottom: 24px; /* 修复：参与统计区域间距 */
+            }
+            
+            .card {
+                margin: 20px 0; /* 修复：标准移动设备卡片间距 */
             }
         }
         
