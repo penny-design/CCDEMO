@@ -1,3 +1,0 @@
-Test file to verify encoding fix
-测试编码修复的文件
-This file contains Chinese characters: 中文字符测试
