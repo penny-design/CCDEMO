@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速移动端测试 - P1原型</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+        
+        .test-header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .test-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .test-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #25D366;
+        }
+        
+        .card-title {
+            color: #128C7E;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .test-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .test-link {
+            display: block;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(37, 211, 102, 0.3);
+        }
+        
+        .test-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
+        }
+        
+        .test-link.secondary {
+            background: linear-gradient(135deg, #64748b, #475569);
+            box-shadow: 0 3px 10px rgba(100, 116, 139, 0.3);
+        }
+        
+        .test-link.secondary:hover {
+            box-shadow: 0 5px 20px rgba(100, 116, 139, 0.4);
+        }
+        
+        .description {
+            color: #64748b;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+        
+        .device-info {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #dcfce7;
+            color: #15803d;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 5px 0;
+        }
+        
+        .warning-badge {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #475569;
+        }
+        
+        .feature-list li::before {
+            content: '✓';
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .quick-test-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #25D366;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 25px;
+            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .quick-test-panel:hover {
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 768px) {
+            .test-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-test-panel {
+                bottom: 10px;
+                right: 10px;
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <h1>📱 P1移动端快速测试</h1>
+        <p>Day 2状态变化和交互验证 - 专为移动设备优化</p>
+        <div class="status-badge">测试环境已就绪</div>
+        <div class="status-badge warning-badge">WhatsApp模拟模式</div>
+    </div>
+    
+    <div class="test-cards">
+        <!-- 完整测试环境 -->
+        <div class="test-card">
+            <div class="card-title">🧪 完整测试环境</div>
+            <div class="description">
+                双屏设计的专业测试工具，左侧移动设备模拟器 + 右侧控制面板，
+                支持6种主流移动设备切换和完整的WhatsApp交互模拟。
+            </div>
+            <div class="test-links">
+                <a href="./mobile-test-environment.html" class="test-link" target="_blank">
+                    🚀 打开完整测试环境
+                </a>
+            </div>
+            <ul class="feature-list">
+                <li>6种移动设备模拟 (iPhone SE ~ Pixel 7)</li>
+                <li>实时状态切换控制</li>
+                <li>WhatsApp交互完整模拟</li>
+                <li>Day 2验收清单自动检查</li>
+                <li>响应式适配实时验证</li>
+            </ul>
+        </div>
+        
+        <!-- 状态测试 -->
+        <div class="test-card">
+            <div class="card-title">🔄 三状态快速测试</div>
+            <div class="description">
+                快速验证P1原型的三个核心状态：默认状态、邀请状态、结束状态。
+                使用原有的test-states.html工具进行基础验证。
+            </div>
+            <div class="test-links">
+                <a href="./test-states.html" class="test-link secondary" target="_blank">
+                    📋 基础状态测试
+                </a>
+                <a href="./p1-landing-page.html" class="test-link secondary" target="_blank">
+                    🏠 直接访问原型
+                </a>
+            </div>
+            <div class="device-info">
+                <strong>推荐测试顺序：</strong>
+                <br>1. 默认状态 → 2. 邀请状态 → 3. 结束状态
+            </div>
+        </div>
+        
+        <!-- 移动端专项测试 -->
+        <div class="test-card">
+            <div class="card-title">📱 移动端专项测试</div>
+            <div class="description">
+                针对移动设备的专项测试链接，覆盖主流移动设备尺寸。
+                直接在移动设备上访问以验证真实体验。
+            </div>
+            <div class="test-links">
+                <a href="./p1-landing-page.html?mobile=320" class="test-link secondary">
+                    📱 iPhone SE 测试 (320px)
+                </a>
+                <a href="./p1-landing-page.html?mobile=390" class="test-link secondary">
+                    📱 iPhone 12 测试 (390px)
+                </a>
+                <a href="./p1-landing-page.html?mobile=412" class="test-link secondary">
+                    📱 Android 测试 (412px)
+                </a>
+            </div>
+            <div class="device-info">
+                <strong>测试重点：</strong> 触摸目标大小、文字可读性、布局适配
+            </div>
+        </div>
+        
+        <!-- WhatsApp模拟测试 -->
+        <div class="test-card">
+            <div class="card-title">📞 WhatsApp交互测试</div>
+            <div class="description">
+                专门验证WhatsApp相关的交互逻辑，包括CTA点击、SESSION_ID生成、
+                跳转URL构建等核心功能的模拟验证。
+            </div>
+            <div class="test-links">
+                <a href="javascript:void(0)" onclick="testWhatsAppFlow()" class="test-link">
+                    🔄 测试CTA点击流程
+                </a>
+                <a href="javascript:void(0)" onclick="showSessionDemo()" class="test-link secondary">
+                    🎯 查看SESSION_ID演示
+                </a>
+            </div>
+            <div id="whatsapp-demo" class="device-info" style="display: none;">
+                <strong>WhatsApp跳转演示：</strong>
+                <br><span id="demo-url" style="font-family: monospace; font-size: 12px; color: #0969da;"></span>
+            </div>
+        </div>
+        
+        <!-- Day 2验收清单 -->
+        <div class="test-card">
+            <div class="card-title">✅ Day 2验收标准</div>
+            <div class="description">
+                基于Stage3_Prototype_Development.md的Day 2验收要求，
+                系统化检查所有功能是否符合标准。
+            </div>
+            <ul class="feature-list">
+                <li>S1.2邀请Toast个性化显示</li>
+                <li>CTA按钮状态变化 ("参与中" → 恢复)</li>
+                <li>SESSION_ID生成和存储</li>
+                <li>WhatsApp跳转URL构建</li>
+                <li>响应式设计 (320px-414px)</li>
+                <li>跑马灯动画流畅度</li>
+                <li>触摸交互优化</li>
+                <li>跨设备体验一致性</li>
+            </ul>
+            <div class="test-links">
+                <a href="./mobile-test-environment.html" class="test-link">
+                    🧪 运行完整验收测试
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 快速测试面板 -->
+    <div class="quick-test-panel" onclick="openQuickTest()">
+        🚀 快速测试
+    </div>
+    
+    <script>
+        // 测试WhatsApp流程
+        function testWhatsAppFlow() {
+            const sessionId = 'SESSION_' + Date.now().toString(36).toUpperCase();
+            const businessNumber = '1234567890';
+            const whatsappUrl = `wa.me/${businessNumber}?text=我要参与-${sessionId}`;
+            
+            alert(`🔄 WhatsApp流程模拟:\n\n1. 生成SESSION_ID: ${sessionId}\n2. 构建跳转URL: ${whatsappUrl}\n3. 按钮状态: "参与抽奖" → "参与中"\n4. 2.5秒后恢复按钮状态\n\n✅ 流程模拟完成！`);
+        }
+        
+        // 显示SESSION_ID演示
+        function showSessionDemo() {
+            const demo = document.getElementById('whatsapp-demo');
+            const demoUrl = document.getElementById('demo-url');
+            
+            const sessionId = 'SESSION_' + Date.now().toString(36).toUpperCase();
+            const businessNumber = '1234567890';
+            const whatsappUrl = `wa.me/${businessNumber}?text=我要参与-${sessionId}`;
+            
+            demoUrl.textContent = whatsappUrl;
+            demo.style.display = 'block';
+            
+            setTimeout(() => {
+                demo.style.display = 'none';
+            }, 10000);
+        }
+        
+        // 打开快速测试
+        function openQuickTest() {
+            window.open('./mobile-test-environment.html', '_blank');
+        }
+        
+        // 检查是否在移动设备上
+        function isMobileDevice() {
+            return window.innerWidth <= 768;
+        }
+        
+        // 初始化
+        window.onload = function() {
+            if (isMobileDevice()) {
+                console.log('检测到移动设备，建议使用移动端专项测试');
+            }
+            
+            console.log('P1移动端快速测试页面已加载');
+            console.log('建议测试顺序：');
+            console.log('1. 打开完整测试环境');
+            console.log('2. 切换不同移动设备');
+            console.log('3. 测试三个状态切换');
+            console.log('4. 验证WhatsApp交互');
+            console.log('5. 运行完整验收测试');
+        };
+    </script>
+</body>
+</html>
