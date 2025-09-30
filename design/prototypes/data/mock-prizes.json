@@ -1,0 +1,72 @@
+[
+  {
+    "id": "prize_001",
+    "level": "一等奖",
+    "name": "iPhone 15 Pro",
+    "description": "256GB 深空黑色",
+    "quantity": 1,
+    "value": "¥8,999",
+    "imageUrl": "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop&crop=center&auto=format",
+    "detailImageUrl": "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=800&h=600&fit=crop&crop=center&auto=format",
+    "type": "physical",
+    "redemptionType": "form",
+    "probability": "0.01%",
+    "order": 1
+  },
+  {
+    "id": "prize_002", 
+    "level": "二等奖",
+    "name": "AirPods Pro",
+    "description": "第二代 USB-C 充电盒",
+    "quantity": 3,
+    "value": "¥1,899",
+    "imageUrl": "https://images.unsplash.com/photo-1606318187959-2b6e500c4b72?w=400&h=400&fit=crop&crop=center&auto=format",
+    "detailImageUrl": "https://images.unsplash.com/photo-1606318187959-2b6e500c4b72?w=800&h=600&fit=crop&crop=center&auto=format",
+    "type": "physical",
+    "redemptionType": "form",
+    "probability": "0.05%",
+    "order": 2
+  },
+  {
+    "id": "prize_003",
+    "level": "三等奖", 
+    "name": "Apple Store礼品卡",
+    "description": "价值500元",
+    "quantity": 10,
+    "value": "¥500",
+    "imageUrl": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=400&fit=crop&crop=center&auto=format",
+    "detailImageUrl": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop&crop=center&auto=format",
+    "type": "virtual",
+    "redemptionType": "virtual_code",
+    "probability": "0.2%",
+    "order": 3
+  },
+  {
+    "id": "prize_004",
+    "level": "四等奖",
+    "name": "Apple Music订阅",
+    "description": "3个月会员",
+    "quantity": 50,
+    "value": "¥30",
+    "imageUrl": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop&crop=center&auto=format",
+    "detailImageUrl": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=600&fit=crop&crop=center&auto=format",
+    "type": "virtual",
+    "redemptionType": "whatsapp_service",
+    "probability": "1%",
+    "order": 4
+  },
+  {
+    "id": "prize_005",
+    "level": "五等奖",
+    "name": "定制周边礼包",
+    "description": "WhatsApp主题周边套装",
+    "quantity": 100,
+    "value": "¥99",
+    "imageUrl": "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=400&fit=crop&crop=center&auto=format",
+    "detailImageUrl": "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&h=600&fit=crop&crop=center&auto=format",
+    "type": "physical", 
+    "redemptionType": "whatsapp_service",
+    "probability": "2%",
+    "order": 5
+  }
+]

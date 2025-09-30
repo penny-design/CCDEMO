@@ -14,7 +14,7 @@
 基于已确认的12个用户故事和完整的Requirements规格，本文档定义了WhatsApp抽奖活动系统的完整用户流程设计。
 
 ### **核心设计原则**
-- **双重验证流程**: Google登录 + WhatsApp验证
+- **激活路径**: WhatsApp验证优先（不包含Google注册/登录）
 - **利他分享心理学**: 强调帮助朋友而非自己获利
 - **透明度优先**: 中奖信息完全公开透明
 - **客服支持常驻**: 关键环节都有客服联系方式
@@ -37,18 +37,12 @@ graph TD
         F --> G
     end
 
-    subgraph "用户激活 - 双重验证"
-        G --> H[触发Google一键登录]
-        H --> I{Google登录结果}
-        I -->|成功| J[获取Google信息<br/>头像+姓名+邮箱+ID]
-        I -->|失败| K[显示登录错误<br/>提供重试选项]
-        K --> H
-        
-        J --> L[生成SESSION_ID]
+    subgraph "用户激活 - WhatsApp验证"
+        G --> L[生成SESSION_ID]
         L --> M[跳转WhatsApp预填消息<br/>我要参与-SESSION_ID]
         M --> N[用户发送WhatsApp消息]
         N --> O[后台获取手机号]
-        O --> P[关联Google信息+WhatsApp手机号]
+        O --> P[完成激活绑定]
         P --> Q[WhatsApp机器人回复激活成功]
         Q --> R[H5页面Realtime监听到激活]
         R --> S[自动跳转到活动主页]
@@ -68,7 +62,7 @@ graph TD
     end
 
     subgraph "病毒式传播循环"
-        Z --> AA[生成专属邀请链接<br/>包含用户ID和Google昵称]
+        Z --> AA[生成专属邀请链接<br/>包含用户ID和昵称]
         AA --> BB[一键WhatsApp分享]
         BB --> CC{分享目标}
         CC -->|分享到群组| DD[WhatsApp群组分享]
@@ -82,7 +76,7 @@ graph TD
         GG --> HH[为邀请者增加N个抽奖码]
         HH --> II[WhatsApp模板消息通知邀请者]
         II --> JJ[H5页面Realtime更新抽奖码数量]
-        JJ --> KK[跑马灯显示Google头像张三邀请了3个人]
+        JJ --> KK[跑马灯显示头像策略昵称：张三邀请了3个人]
     end
 
     subgraph "开奖与结果展示"
@@ -157,16 +151,10 @@ stateDiagram-v2
     S1_1_默认状态 --> 展示标准落地页: 显示奖品清单
     S1_2_邀请状态 --> 展示个性化Toast: 朋友名送你一个抽奖码
     
-    展示标准落地页 --> 触发Google登录: 点击立即参与
-    展示个性化Toast --> 触发Google登录: 点击领取并参与
+    展示标准落地页 --> 生成会话并唤醒: 点击立即参与
+    展示个性化Toast --> 生成会话并唤醒: 点击领取并参与
     
-    触发Google登录 --> Google登录流程: 调用OAuth API
-    Google登录流程 --> 登录成功: 获取用户信息
-    Google登录流程 --> 登录失败: 显示错误重试
-    
-    登录失败 --> Google登录流程: 用户重试
-    登录成功 --> WhatsApp验证: 跳转WhatsApp发送消息
-    
+    生成会话并唤醒 --> WhatsApp验证: 跳转WhatsApp发送消息
     WhatsApp验证 --> 等待激活: 页面轮询或Realtime监听
     等待激活 --> 激活成功: 后台完成身份绑定
     激活成功 --> [*]: 跳转到活动主页
@@ -257,18 +245,6 @@ stateDiagram-v2
 
 ```mermaid
 graph TD
-    subgraph "Google登录异常"
-        A[Google登录失败] --> B{失败原因}
-        B -->|网络问题| C[显示网络错误<br/>提供重试按钮]
-        B -->|用户取消| D[保持在落地页<br/>可重新点击参与]
-        B -->|权限拒绝| E[显示权限说明<br/>引导用户允许]
-        
-        C --> F[用户点击重试]
-        D --> F
-        E --> F
-        F --> G[重新触发Google登录]
-    end
-
     subgraph "WhatsApp验证异常"
         H[WhatsApp消息发送失败] --> I{失败原因}
         I -->|应用未安装| J[显示安装WhatsApp提示]
@@ -307,7 +283,6 @@ graph TD
         FF --> GG[重新提交表单]
     end
 
-    style A fill:#ffcdd2
     style H fill:#ffcdd2
     style P fill:#fff3e0
     style W fill:#ffcdd2
@@ -325,13 +300,13 @@ graph TD
 - **网络断开**: 显示离线提示，恢复后自动重试
 - **API响应超时**: 显示加载提示，提供重试选项
 - **Realtime连接断开**: 自动重连机制，备用轮询方案
-- **Google OAuth限流**: 错误提示和延迟重试
+- **消息/接口限流**: 错误提示和延迟重试
 
 #### **业务边界**
 - **活动未开始**: 显示倒计时，禁用参与按钮
 - **活动已结束**: 全局遮罩，仍可查看结果
 - **奖品数量不足**: 实时检查，动态调整显示
-- **重复参与**: 基于Google ID和手机号去重
+- **重复参与**: 基于WhatsApp手机号/wa_user_id去重
 
 ---
 
@@ -356,10 +331,6 @@ graph TD
     end
 
     subgraph "第三方集成"
-        J[Google OAuth API] --> K[用户信息获取]
-        K --> L[数据库存储]
-        L --> F
-        
         M[WhatsApp Business API] --> N[消息处理]
         N --> O[激活状态更新]
         O --> F
@@ -388,12 +359,10 @@ graph TD
 ```javascript
 // 用户状态数据结构
 const UserState = {
-  // Google登录信息
-  google: {
-    id: "google_123456",
+  // 用户基本资料（昵称与头像采用DiceBear/虚拟策略）
+  profile: {
     name: "张三",
-    email: "zhangsan@gmail.com",
-    picture: "https://lh3.googleusercontent.com/..."
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=张三"
   },
   
   // WhatsApp验证信息
@@ -472,8 +441,8 @@ const ActivityConfig = {
 | 流程节点 | 性能目标 | 监控方式 |
 |----------|----------|----------|
 | 落地页加载 | <2s | Google Analytics pageload |
-| Google登录响应 | <2s | OAuth API响应时间 |
-| WhatsApp跳转 | <1s | 前端性能监控 |
+| WhatsApp唤起响应 | <1s | 前端性能监控 |
+| 激活消息处理 | <2s | Webhook处理时间 |
 | 激活状态检查 | <3s | Realtime延迟监控 |
 | 页面状态切换 | <500ms | 前端性能API |
 | 头像加载 | <1s | 图片加载完成事件 |
@@ -484,8 +453,8 @@ const ActivityConfig = {
 | 转化节点 | 目标转化率 | GA4事件埋点 |
 |----------|------------|-------------|
 | 访问→点击参与 | >70% | participate_click |
-| 点击→Google登录完成 | >85% | google_login_success |
-| Google登录→WhatsApp验证 | >80% | whatsapp_verification |
+| 点击参与→唤起WhatsApp | >85% | whatsapp_launch |
+| 消息发送→后台激活完成 | >80% | whatsapp_verification |
 | 激活→首次邀请分享 | >30% | first_invite_share |
 | 中奖→开始兑奖 | >95% | redemption_start |
 | 开始兑奖→完成兑奖 | >90% | redemption_complete |
@@ -514,7 +483,7 @@ const ActivityConfig = {
 
 ### **业务价值验收**
 - [ ] 流程设计最大化病毒传播效果
-- [ ] 双重验证确保数据完整性
+ - [ ] 验证流程确保数据完整性（WhatsApp）
 - [ ] 透明度设计增强用户信任
 - [ ] 客服支持降低用户流失
 

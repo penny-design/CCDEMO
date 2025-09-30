@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P1: 落地页原型 - WhatsApp抽奖活动系统</title>
+    <meta name="description" content="基于requirements.md用户故事的P1落地页高保真原型，包含S1.1默认、S1.2邀请、S1.3结束三个状态">
+    
+    <!-- 设计系统CSS -->
+    <link rel="stylesheet" href="./assets/css/design-tokens.css">
+    <link rel="stylesheet" href="./assets/css/components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* P1落地页专用样式 */
+        
+        /* ==================== 页面状态管理 ==================== */
+        
+        /* S1.1 默认状态 */
+        .page-state-s11 .state-s12,
+        .page-state-s11 .state-s13 {
+            display: none;
+        }
+        
+        /* S1.2 邀请状态 */
+        .page-state-s12 .state-s11,
+        .page-state-s12 .state-s13 {
+            display: none;
+        }
+        
+        /* S1.3 活动结束状态 */
+        .page-state-s13 .state-s11,
+        .page-state-s13 .state-s12 {
+            display: none;
+        }
+        
+        /* ==================== S1.2 个性化Toast ==================== */
+        
+        .invite-toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-primary);
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-whatsapp);
+            z-index: 100;
+            animation: slideDownFadeIn 0.5s ease-out;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .invite-toast::before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid var(--color-primary);
+        }
+        
+        @keyframes slideDownFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        
+        /* ==================== S1.3 活动结束遮罩 ==================== */
+        
+        .activity-ended-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .ended-message {
+            background: white;
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            max-width: 320px;
+            margin: 0 var(--spacing-lg);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .ended-message h2 {
+            color: var(--color-text);
+            margin-bottom: var(--spacing-lg);
+            font-size: 20px;
+        }
+        
+        .ended-message p {
+            color: var(--color-muted);
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        /* ==================== Header组件 ==================== */
+        
+        .ccmp-header {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 56px;
+        }
+        
+        .ccmp-header__container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            padding: 8px 12px;
+        }
+        
+        .ccmp-header__brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .ccmp-header__logo {
+            width: 32px;
+            height: 32px;
+            background: var(--color-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .ccmp-header__title {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--color-text);
+        }
+        
+        .ccmp-header__menu-toggle {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--duration-normal) ease;
+        }
+        
+        .ccmp-header__menu-toggle:hover {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: white;
+        }
+        
+        /* ==================== Hero Prize List 奖品统一模块 ==================== */
+        
+        .hero-prize-list {
+            padding: 12px 16px 16px;
+            background: var(--color-surface);
+        }
+        
+        .hero-prize-item {
+            font-size: 14px;
+            color: var(--color-text);
+            line-height: 1.6;
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .hero-prize-item:first-child {
+            padding-top: 0;
+        }
+        
+        .hero-prize-item:last-child {
+            padding-bottom: 0;
+        }
+        
+        .prize-level {
+            font-weight: 600;
+            color: var(--color-primary-dark);
+            min-width: 60px;
+        }
+        
+        .prize-details {
+            flex: 1;
+        }
+        
+        .prize-quantity {
+            font-weight: 500;
+            color: var(--color-muted);
+            font-size: 12px;
+        }
+
+        /* 保持原版奖品清单风格：无缩略图，仅文本 */
+        
+        /* ==================== CTA区域专用样式 ==================== */
+        
+        .cta-wrap {
+            margin: var(--gap-section) 0;
+            padding: var(--pad-card);
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .cta-hint {
+            background: white;
+            border: 1px solid var(--color-primary);
+            color: var(--color-text);
+            padding: 6px 12px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .cta-sub {
+            color: var(--color-muted);
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .participation-stats {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .participation-count {
+            font-weight: 700;
+            color: var(--color-text);
+            font-size: 16px;
+        }
+        
+        /* ==================== 活动规则列表 ==================== */
+        
+        .rules-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        
+        .rules-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-weight: 500;
+            color: var(--color-text);
+            line-height: 1.5;
+        }
+        
+        .rules-list li::before {
+            content: "✓";
+            color: var(--color-primary);
+            font-weight: 700;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        /* ==================== 赞助商区域 ==================== */
+        
+        .sponsor {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: clamp(8px, 3vw, 16px);
+            flex-wrap: wrap;
+        }
+        
+        .sponsor-left {
+            display: flex;
+            align-items: center;
+            gap: clamp(8px, 2.5vw, 12px);
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .sponsor .logo {
+            flex-shrink: 0;
+            width: clamp(36px, 10vw, 48px);
+            height: clamp(36px, 10vw, 48px);
+            background: var(--color-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: clamp(16px, 5vw, 24px);
+        }
+        
+        .sponsor-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .sponsor-name {
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 2px;
+        }
+        
+        .sponsor-badge {
+            color: var(--color-muted);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .sponsor-badge i {
+            color: var(--color-primary);
+        }
+        
+        /* ==================== 页脚样式 ==================== */
+        
+        .page-footer {
+            background: var(--color-surface);
+            padding: var(--spacing-xxl) 0 var(--spacing-xl);
+            margin-top: var(--gap-section);
+            border-top: 1px solid var(--color-border);
+        }
+        
+        .footer-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .footer-brand {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-primary-dark);
+        }
+        
+        .footer-brand i {
+            margin-right: 8px;
+        }
+        
+        .footer-subtitle {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--color-muted);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        
+        .footer-subtitle i {
+
+        /* 允许用背景图替换Banner图（来自活动配置） */
+        .hero-banner .img.use-bg {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .hero-banner .img.use-bg picture,
+        .hero-banner .img.use-bg img,
+        .hero-banner .img.use-bg source { display: none !important; }
+            color: var(--color-primary);
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .footer-links a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color var(--duration-normal) ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--color-primary);
+        }
+        
+        .footer-copyright {
+            color: var(--color-muted);
+            font-size: 12px;
+            text-align: center;
+            border-top: 1px solid var(--color-border);
+            padding-top: 16px;
+            width: 100%;
+            font-weight: 500;
+        }
+        
+        .footer-certification {
+            margin-top: 4px;
+            color: var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        
+        /* ==================== 响应式优化 ==================== */
+        
+        /* iPhone SE 及类似小屏设备 */
+        @media (max-width: 375px) {
+            .container {
+                padding: 0 8px;
+            }
+            
+            .hero-prize-list {
+                padding: 8px 12px 12px;
+            }
+            
+            .hero-prize-item {
+                font-size: 13px;
+                padding: 3px 0;
+            }
+            
+            .cta-wrap {
+                padding: 12px;
+            }
+            
+            .footer-links {
+                gap: 16px;
+            }
+        }
+        
+        /* 标准移动设备 */
+        @media (min-width: 375px) and (max-width: 414px) {
+            .container {
+                padding: 0 12px;
+            }
+        }
+        
+        /* 横屏模式优化 */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .invite-toast {
+                top: 60px;
+            }
+            
+            .ccmp-header {
+                height: 48px;
+            }
+        }
+    </style>
+</head>
+<body class="page-state-s11" id="landingPage">
+    <!-- Header组件 -->
+    <header role="banner" class="ccmp-header">
+        <div class="ccmp-header__container">
+            <div class="ccmp-header__brand">
+                <div class="ccmp-header__logo">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <div class="ccmp-header__title">
+                    WhatsApp官方抽奖工具
+                </div>
+            </div>
+            <button class="ccmp-header__menu-toggle" aria-label="打开菜单">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container" role="main">
+        <!-- S1.2 个性化Toast -->
+        <div class="invite-toast state-s12" id="inviteToast" role="status" aria-live="polite">
+            <i class="fas fa-gift" style="margin-right: 6px;"></i>
+            <span id="inviterName">朋友</span>送你一个抽奖码
+        </div>
+
+        <!-- Hero Section - 现代H5全宽banner设计 -->
+        <section class="card card-hero" aria-labelledby="sec-hero">
+            <h2 id="sec-hero" class="sr-only">抽奖活动展示</h2>
+            <div class="hero-banner" role="img" aria-label="活动奖品展示">
+                <div class="img" id="bannerImgContainer">
+                    <picture>
+                        <source
+                            srcset="
+                                https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=375&h=211&fit=crop&crop=center&auto=format&fm=webp 375w,
+                                https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=768&h=432&fit=crop&crop=center&auto=format&fm=webp 768w,
+                                https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=1024&h=576&fit=crop&crop=center&auto=format&fm=webp 1024w
+                            "
+                            sizes="(max-width: 768px) 375px, (max-width: 1024px) 768px, 1024px"
+                            type="image/webp"
+                        >
+                        <img
+                            src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=680&h=360&fit=crop&crop=center&auto=format"
+                            srcset="
+                                https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=375&h=211&fit=crop&crop=center&auto=format 375w,
+                                https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=768&h=432&fit=crop&crop=center&auto=format 768w,
+                                https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=1024&h=576&fit=crop&crop=center&auto=format 1024w
+                            "
+                            sizes="(max-width: 768px) 375px, (max-width: 1024px) 768px, 1024px"
+                            alt="iPhone 15 Pro等奖品展示"
+                            loading="lazy"
+                            width="680"
+                            height="360"
+                            style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-lg);">
+                    </picture>
+                </div>
+                
+                <!-- 跑马灯组件 - Google头像显示策略 -->
+                <div class="ticker" role="status" aria-live="polite" aria-label="最新活动动态">
+                    <div class="ticker-track" id="tickerTrack">
+                        <!-- 动态生成的跑马灯内容 -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Banner下方奖品列表 - 统一模块设计 -->
+            <div class="hero-prize-list" id="prizeList">
+                <!-- 动态生成的奖品列表 -->
+            </div>
+        </section>
+
+        <!-- Countdown Section - WhatsApp绿色主题 -->
+        <section class="card" id="countdown-card" aria-label="活动倒计时">
+            <div class="card-body">
+                <div class="countdown-grid" aria-live="polite" id="countdownDisplay">
+                    <div class="cd-box"><span class="cd-number" id="cd-day">02</span><span class="cd-label">天</span></div>
+                    <div class="cd-box"><span class="cd-number" id="cd-hour">14</span><span class="cd-label">小时</span></div>
+                    <div class="cd-box"><span class="cd-number" id="cd-minute">30</span><span class="cd-label">分</span></div>
+                    <div class="cd-box"><span class="cd-number" id="cd-second">45</span><span class="cd-label">秒</span></div>
+                </div>
+                <div class="end-time-center body-small" id="cd-end">
+                    活动结束时间：2025-10-01 18:00
+                </div>
+            </div>
+        </section>
+
+        <!-- Sponsor Section - WhatsApp官方认证 -->
+        <section class="card" aria-labelledby="sec-sponsor">
+            <div class="card-body sponsor">
+                <div class="sponsor-left">
+                    <div class="logo" role="img" aria-label="WhatsApp官方抽奖工具 Logo">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="sponsor-info">
+                        <div class="sponsor-name">WhatsApp官方抽奖工具</div>
+                        <div class="sponsor-badge">
+                            <i class="fas fa-shield-check"></i>
+                            官方认证合作伙伴
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: clamp(6px, 2vw, 8px); align-items: flex-end; flex-shrink: 0;">
+                    <a href="https://business.whatsapp.com/" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="btn-secondary">
+                        <i class="fas fa-external-link-alt" style="margin-right: clamp(2px, 1vw, 4px); font-size: clamp(10px, 2.8vw, 12px);"></i>
+                        去查看
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Activity Rules Section -->
+        <section class="card" aria-labelledby="sec-rules">
+            <div class="card-body">
+                <h3 class="h3" style="margin-bottom: 12px; color: var(--color-primary-dark);">
+                    <i class="fas fa-clipboard-list" style="margin-right: 8px;"></i>
+                    抽奖说明
+                </h3>
+                <ul class="rules-list" aria-label="活动详情" id="activityRules">
+                    <!-- 动态生成的活动规则 -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- CTA Section - uiverse.io风格按钮 -->
+        <section aria-label="参与抽奖" class="cta-wrap">
+            <!-- S1.1 默认状态CTA -->
+            <div class="state-s11">
+                <div class="cta-hint" aria-live="polite">
+                    <i class="fas fa-shield-check" style="color: var(--color-primary); margin-right: 6px;"></i>
+                    验证成功，立即参与抽奖！
+                </div>
+                <div style="text-align: center; margin-bottom: 8px; font-size: 14px; color: var(--color-muted);">
+                    使用一个抽奖码
+                </div>
+                <button class="btn-cta-round" type="button" aria-label="参与抽奖" id="ctaButtonDefault">
+                    <span>立即抽奖</span>
+                </button>
+            </div>
+            
+            <!-- S1.2 邀请状态CTA -->
+            <div class="state-s12">
+                <div class="cta-hint" aria-live="polite">
+                    <i class="fas fa-gift" style="color: var(--color-primary); margin-right: 6px;"></i>
+                    朋友为你准备了专属抽奖码！
+                </div>
+                <div style="text-align: center; margin-bottom: 8px; font-size: 14px; color: var(--color-muted);">
+                    免费获得抽奖机会
+                </div>
+                <button class="btn-cta-round" type="button" aria-label="领取并参与" id="ctaButtonInvite">
+                    <span>领取并参与</span>
+                </button>
+            </div>
+            
+            <!-- 参与人数统计 -->
+            <div class="participation-stats">
+                <div class="avatars" aria-hidden="true" id="participantAvatars">
+                    <!-- 动态生成的头像 -->
+                </div>
+                <div class="cta-sub">
+                    <span class="participation-count" id="participationCount">18,975</span> 
+                    人正在参与
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- S1.3 活动结束遮罩 -->
+    <div class="activity-ended-overlay state-s13" id="endedOverlay">
+        <div class="ended-message">
+            <h2><i class="fas fa-clock" style="margin-right: 8px; color: var(--color-muted);"></i>活动已结束</h2>
+            <p>感谢您的关注，请关注下期活动获得更多精彩奖品</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer role="contentinfo" class="page-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-brand">
+                        <i class="fab fa-whatsapp"></i>
+                        WhatsApp官方抽奖工具
+                    </div>
+                    <div class="footer-subtitle">
+                        <i class="fas fa-shield-alt"></i>
+                        官方认证合作伙伴 | 安全保障认证
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <a href="#" onclick="return false;">服务条款</a>
+                    <a href="#" onclick="return false;">隐私保护政策</a>
+                    <a href="#" onclick="return false;">合规性声明</a>
+                    <a href="#" onclick="return false;">联系我们</a>
+                </div>
+
+                <div class="footer-copyright">
+                    <div>© 2025 WhatsApp LLC. 保留所有权利。</div>
+                    <div class="footer-certification">
+                        <i class="fas fa-certificate"></i>
+                        官方认证 | 安全保障 | 透明公正
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="./assets/js/data-simulator.js"></script>
+    
+    <script>
+        // P1落地页状态管理和交互逻辑
+        class LandingPageController {
+            constructor() {
+                this.currentState = 'S1.1';
+                this.pageElement = document.getElementById('landingPage');
+                this.dataSimulator = window.dataSimulator;
+                this.init();
+            }
+            
+            async init() {
+                // 等待数据模拟器初始化完成
+                if (this.dataSimulator) {
+                    await this.waitForDataSimulator();
+                }
+                
+                // 检测页面状态
+                this.detectPageState();
+                
+                // 初始化组件
+                this.initComponents();
+                
+                // 绑定事件
+                this.bindEvents();
+                
+                console.log('P1落地页初始化完成:', {
+                    state: this.currentState,
+                    dataSimulator: !!this.dataSimulator
+                });
+            }
+            
+            async waitForDataSimulator() {
+                let attempts = 0;
+                while ((!this.dataSimulator?.users || this.dataSimulator.users.length === 0) && attempts < 50) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+            }
+            
+            detectPageState() {
+                const stateData = this.dataSimulator?.detectPageState() || { state: 'S1.1', data: {} };
+                this.currentState = stateData.state;
+                this.stateData = stateData.data;
+                
+                // 更新页面状态类（修正 S1.1/S1.2/S1.3 → s11/s12/s13 的映射，避免出现 "page-state-s1.1" 导致样式失效）
+                this.updatePageStateClass();
+                
+                // 处理特定状态
+                if (this.currentState === 'S1.2') {
+                    this.handleInviteState();
+                } else if (this.currentState === 'S1.3') {
+                    this.handleEndedState();
+                }
+            }
+            
+            handleInviteState() {
+                // 显示个性化Toast
+                const inviterName = this.stateData.inviterName || '朋友';
+                const inviterNameElement = document.getElementById('inviterName');
+                if (inviterNameElement) {
+                    inviterNameElement.textContent = this.truncate(inviterName, 10);
+                }
+                
+                // 自动隐藏Toast
+                setTimeout(() => {
+                    const toast = document.getElementById('inviteToast');
+                    if (toast) {
+                        toast.style.animation = 'slideUpFadeOut 0.5s ease-out forwards';
+                    }
+                }, 5000);
+                
+                // 存储邀请者信息到localStorage
+                localStorage.setItem('inviter_info', JSON.stringify({
+                    ref: this.stateData.inviteRef,
+                    name: this.stateData.inviterName,
+                    timestamp: Date.now()
+                }));
+            }
+            
+            handleEndedState() {
+                // 活动结束状态的特殊处理
+                console.log('活动已结束状态');
+            }
+            
+            initComponents() {
+                this.initBanner();
+                this.initTickerMessages();
+                this.initPrizeList();
+                this.initCountdown();
+                this.initParticipantStats();
+                this.initActivityRules();
+            }
+
+            initBanner() {
+                if (!this.dataSimulator) return;
+                const cfg = this.dataSimulator.getActivityConfig();
+                const url = cfg?.marketing?.banner_image_url;
+                const container = document.getElementById('bannerImgContainer');
+                if (url && container) {
+                    container.style.backgroundImage = `url('${url}')`;
+                    container.classList.add('use-bg');
+                }
+            }
+            
+            initTickerMessages() {
+                if (!this.dataSimulator) return;
+                
+                const messages = this.dataSimulator.generateTickerMessages();
+                const track = document.getElementById('tickerTrack');
+                
+                if (track && messages.length > 0) {
+                    // 生成跑马灯HTML
+                    const messageHtml = messages.map(msg => {
+                        return `<span>
+                            <img src="${msg.avatar}" alt="用户头像" class="avatar-sm" 
+                                 onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(msg.user?.name || 'default')}'">
+                            ${msg.message}
+                        </span>`;
+                    }).join('');
+                    
+                    // 重复消息以确保无缝循环
+                    track.innerHTML = messageHtml + messageHtml;
+                }
+            }
+            
+            initPrizeList() {
+                if (!this.dataSimulator) return;
+                
+                const prizes = this.dataSimulator.getPrizesForDisplay();
+                const listElement = document.getElementById('prizeList');
+                
+                if (listElement && prizes.length > 0) {
+                    const html = prizes.map(prize => `
+                        <div class="hero-prize-item">
+                            <span class="prize-level">${prize.level}</span>
+                            <span class="prize-details">${prize.name}</span>
+                            <span class="prize-quantity">× ${prize.quantity}</span>
+                        </div>
+                    `).join('');
+                    
+                    listElement.innerHTML = html;
+                }
+            }
+            
+            initCountdown() {
+                this.updateCountdown();
+                setInterval(() => {
+                    this.updateCountdown();
+                }, 1000);
+            }
+            
+            updateCountdown() {
+                const countdownData = this.dataSimulator?.getCountdownData() || {
+                    days: 29, hours: 23, minutes: 59, seconds: 45,
+                    endTime: '活动结束时间：30天后'
+                };
+                
+                // 更新显示
+                const elements = {
+                    'cd-day': countdownData.days.toString().padStart(2, '0'),
+                    'cd-hour': countdownData.hours.toString().padStart(2, '0'),
+                    'cd-minute': countdownData.minutes.toString().padStart(2, '0'),
+                    'cd-second': countdownData.seconds.toString().padStart(2, '0'),
+                    'cd-end': countdownData.endTime
+                };
+                
+                Object.entries(elements).forEach(([id, value]) => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.textContent = value;
+                    }
+                });
+                
+                // 只有通过URL参数明确指定才切换到结束状态
+                // 避免因为倒计时数据问题导致错误显示结束状态
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('status') === 'ended') {
+                    if (this.currentState !== 'S1.3') {
+                        this.switchToEndedState();
+                    }
+                }
+                // 当倒计时归零时自动进入结束态
+                if (countdownData.days === 0 && countdownData.hours === 0 && countdownData.minutes === 0 && countdownData.seconds === 0) {
+                    if (this.currentState !== 'S1.3') {
+                        this.switchToEndedState();
+                    }
+                }
+            }
+            
+            initParticipantStats() {
+                if (!this.dataSimulator) return;
+                
+                // 更新参与人数
+                const count = this.dataSimulator.generateParticipationStats();
+                const countElement = document.getElementById('participationCount');
+                if (countElement) {
+                    countElement.textContent = count.toLocaleString();
+                }
+                
+                // 生成参与者头像
+                const avatarsElement = document.getElementById('participantAvatars');
+                if (avatarsElement) {
+                    const users = this.dataSimulator.users.slice(0, 5);
+                    const html = users.map(user => `
+                        <div class="avatar" style="background-image: url('${this.dataSimulator.getAvatarUrl(user)}'); background-size: cover;"></div>
+                    `).join('');
+                    
+                    avatarsElement.innerHTML = html;
+                }
+            }
+            
+            initActivityRules() {
+                if (!this.dataSimulator) return;
+                
+                const config = this.dataSimulator.getActivityConfig();
+                const rulesElement = document.getElementById('activityRules');
+                
+                if (rulesElement && config.rules) {
+                    const html = config.rules.map(rule => `<li>${rule}</li>`).join('');
+                    rulesElement.innerHTML = html;
+                }
+            }
+            
+            bindEvents() {
+                // CTA按钮事件
+                this.bindCTAEvents();
+                
+                // 菜单切换事件
+                const menuToggle = document.querySelector('.ccmp-header__menu-toggle');
+                if (menuToggle) {
+                    menuToggle.addEventListener('click', this.handleMenuToggle.bind(this));
+                }
+                
+                // 图片加载事件
+                this.bindImageEvents();
+            }
+            
+            bindCTAEvents() {
+                // 默认状态CTA
+                const defaultBtn = document.getElementById('ctaButtonDefault');
+                if (defaultBtn) {
+                    defaultBtn.addEventListener('click', this.handleCTAClick.bind(this, 'default'));
+                }
+                
+                // 邀请状态CTA
+                const inviteBtn = document.getElementById('ctaButtonInvite');
+                if (inviteBtn) {
+                    inviteBtn.addEventListener('click', this.handleCTAClick.bind(this, 'invite'));
+                }
+            }
+            
+            handleCTAClick(type) {
+                console.log(`CTA按钮点击: ${type}`, {
+                    state: this.currentState,
+                    timestamp: new Date().toISOString()
+                });
+                
+                // 交互规范：按钮进入加载态 → 立即唤起 WhatsApp 商业号
+                const btn = type === 'invite' ? document.getElementById('ctaButtonInvite') : document.getElementById('ctaButtonDefault');
+                this.setButtonLoading(btn, true);
+
+                // 生成SESSION_ID并构建WhatsApp链接
+                const sessionId = this.dataSimulator?.generateSessionId?.() || `SESS-${Date.now()}`;
+                try {
+                    localStorage.setItem('session_id', sessionId);
+                } catch(e) {}
+
+                const waUrl = this.dataSimulator?.getWhatsAppJoinUrl?.(sessionId);
+
+                // 立即跳转（移动端唤醒App，桌面端打开Web WhatsApp）
+                if (waUrl) {
+                    window.location.href = waUrl;
+                }
+                
+                // 兜底：若未跳走，2.5s后恢复按钮
+                setTimeout(() => this.setButtonLoading(btn, false), 2500);
+            }
+            
+            // 统一按钮加载态管理（文案改为“参与中”）
+            setButtonLoading(btn, isLoading) {
+                if (!btn) return;
+                const label = btn.querySelector('span');
+                btn.classList.toggle('is-loading', isLoading);
+                btn.toggleAttribute('disabled', isLoading);
+                btn.setAttribute('aria-busy', String(isLoading));
+                if (isLoading) {
+                    if (!btn.querySelector('.spinner')) {
+                        btn.insertAdjacentHTML('afterbegin', '<i class="spinner" aria-hidden="true"></i>');
+                    }
+                    if (label) label.textContent = '参与中';
+                } else {
+                    btn.querySelector('.spinner')?.remove();
+                    if (label) label.textContent = (btn.id === 'ctaButtonInvite') ? '领取并参与' : '立即抽奖';
+                }
+            }
+            
+            handleMenuToggle() {
+                console.log('菜单切换被点击');
+                // 这里可以添加菜单展开/收起逻辑
+            }
+            
+            bindImageEvents() {
+                const bannerImg = document.querySelector('.hero-banner .img img');
+                const imgContainer = document.querySelector('.hero-banner .img');
+                
+                if (bannerImg && imgContainer) {
+                    bannerImg.addEventListener('load', function() {
+                        this.classList.add('loaded');
+                        imgContainer.classList.add('loaded');
+                    });
+
+                    bannerImg.addEventListener('error', function() {
+                        imgContainer.classList.add('loaded');
+                        this.style.display = 'none';
+                        imgContainer.style.background = 'var(--color-primary-50)';
+                        imgContainer.innerHTML += '<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--color-muted); font-size: 14px; z-index: 2;">图片加载失败</div>';
+                    });
+
+                    if (bannerImg.complete && bannerImg.naturalWidth > 0) {
+                        bannerImg.classList.add('loaded');
+                        imgContainer.classList.add('loaded');
+                    }
+                }
+            }
+            
+            switchToEndedState() {
+                this.currentState = 'S1.3';
+                this.updatePageStateClass();
+                this.disableCTAs();
+                console.log('切换到活动结束状态');
+            }
+
+            // 规范化并设置页面状态类名，保留除状态类外的其它类
+            updatePageStateClass() {
+                // 期望映射：S1.1 → page-state-s11, S1.2 → page-state-s12, S1.3 → page-state-s13
+                const normalized = `page-state-${this.currentState.toLowerCase().replace(/\./g, '')}`;
+
+                // 移除可能残留的状态类
+                this.pageElement.classList.remove('page-state-s11', 'page-state-s12', 'page-state-s13');
+                // 保留其它类名，仅添加正确状态类
+                this.pageElement.classList.add(normalized);
+            }
+
+            // 简易字符串截断
+            truncate(str, max) {
+                if (!str) return '';
+                return str.length > max ? (str.slice(0, max) + '…') : str;
+            }
+
+            // 禁用CTA按钮并更新文案
+            disableCTAs() {
+                const btns = [document.getElementById('ctaButtonDefault'), document.getElementById('ctaButtonInvite')].filter(Boolean);
+                btns.forEach(btn => {
+                    this.setButtonLoading(btn, false);
+                    btn.setAttribute('disabled', 'true');
+                    btn.setAttribute('aria-disabled', 'true');
+                    const label = btn.querySelector('span');
+                    if (label) label.textContent = '活动已结束';
+                });
+            }
+        }
+        
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideUpFadeOut {
+                0% {
+                    opacity: 1;
+                    transform: translateX(-50%) translateY(0);
+                }
+                100% {
+                    opacity: 0;
+                    transform: translateX(-50%) translateY(-20px);
+                }
+            }
+            
+            @keyframes fadeInScale {
+                0% {
+                    opacity: 0;
+                    transform: translate(-50%, -50%) scale(0.8);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translate(-50%, -50%) scale(1);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            window.landingPageController = new LandingPageController();
+        });
+        
+        // 开发环境调试信息
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            console.log('P1落地页原型开发模式');
+            console.log('测试URL示例:');
+            console.log('- 默认状态: ?');
+            console.log('- 邀请状态: ?ref=user_001&inviter=张明');
+            console.log('- 结束状态: ?status=ended');
+        }
+    </script>
+</body>
+</html>

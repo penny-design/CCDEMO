@@ -14,7 +14,7 @@
 基于已确认的12个用户故事和完整的Requirements规格，本文档定义了WhatsApp抽奖活动系统的完整用户流程设计。
 
 ### **核心设计原则**
-- **双重验证流程**: Google登录 + WhatsApp验证
+- **激活路径**: WhatsApp优先（直接唤醒）；Google登录为可选扩展（用于头像/数据完善）
 - **利他分享心理学**: 强调帮助朋友而非自己获利
 - **透明度优先**: 中奖信息完全公开透明
 - **客服支持常驻**: 关键环节都有客服联系方式
@@ -37,18 +37,12 @@ graph TD
         F --> G
     end
 
-    subgraph "用户激活 - 双重验证"
-        G --> H[触发Google一键登录]
-        H --> I{Google登录结果}
-        I -->|成功| J[获取Google信息<br/>头像+姓名+邮箱+ID]
-        I -->|失败| K[显示登录错误<br/>提供重试选项]
-        K --> H
-        
-        J --> L[生成SESSION_ID]
+    subgraph "用户激活 - WhatsApp优先（P1）"
+        G --> L[生成SESSION_ID]
         L --> M[跳转WhatsApp预填消息<br/>我要参与-SESSION_ID]
         M --> N[用户发送WhatsApp消息]
         N --> O[后台获取手机号]
-        O --> P[关联Google信息+WhatsApp手机号]
+        O --> P[完成激活绑定<br/>（可选补充Google信息）]
         P --> Q[WhatsApp机器人回复激活成功]
         Q --> R[H5页面Realtime监听到激活]
         R --> S[自动跳转到活动主页]
@@ -157,15 +151,10 @@ stateDiagram-v2
     S1_1_默认状态 --> 展示标准落地页: 显示奖品清单
     S1_2_邀请状态 --> 展示个性化Toast: 朋友名送你一个抽奖码
     
-    展示标准落地页 --> 触发Google登录: 点击立即参与
-    展示个性化Toast --> 触发Google登录: 点击领取并参与
+    展示标准落地页 --> 生成会话并唤醒: 点击立即参与
+    展示个性化Toast --> 生成会话并唤醒: 点击领取并参与
     
-    触发Google登录 --> Google登录流程: 调用OAuth API
-    Google登录流程 --> 登录成功: 获取用户信息
-    Google登录流程 --> 登录失败: 显示错误重试
-    
-    登录失败 --> Google登录流程: 用户重试
-    登录成功 --> WhatsApp验证: 跳转WhatsApp发送消息
+    生成会话并唤醒 --> WhatsApp验证: 跳转WhatsApp发送消息
     
     WhatsApp验证 --> 等待激活: 页面轮询或Realtime监听
     等待激活 --> 激活成功: 后台完成身份绑定
@@ -257,7 +246,7 @@ stateDiagram-v2
 
 ```mermaid
 graph TD
-    subgraph "Google登录异常"
+    subgraph "Google登录异常（可选）"
         A[Google登录失败] --> B{失败原因}
         B -->|网络问题| C[显示网络错误<br/>提供重试按钮]
         B -->|用户取消| D[保持在落地页<br/>可重新点击参与]

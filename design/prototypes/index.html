@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp抽奖活动系统 - 高保真原型导航</title>
+    <link rel="stylesheet" href="./assets/css/design-tokens.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            padding: 0;
+            background: linear-gradient(135deg, var(--color-primary-50), #ffffff);
+        }
+
+        .nav-header {
+            background: white;
+            box-shadow: var(--shadow-card);
+            padding: var(--spacing-xl) 0;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .nav-title {
+            text-align: center;
+            font-size: clamp(24px, 5vw, 32px);
+            font-weight: 800;
+            color: var(--color-primary-dark);
+            margin: 0;
+        }
+
+        .nav-subtitle {
+            text-align: center;
+            color: var(--color-muted);
+            font-size: 16px;
+            margin-top: 8px;
+            margin-bottom: 0;
+        }
+
+        .prototype-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xxl);
+        }
+
+        .prototype-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--color-border);
+            padding: var(--spacing-xl);
+            text-align: center;
+            transition: all var(--duration-normal) ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prototype-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-whatsapp);
+            border-color: var(--color-primary);
+        }
+
+        .prototype-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
+            transition: left var(--duration-slow);
+        }
+
+        .prototype-card:hover::before {
+            left: 0;
+        }
+
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--color-primary-50);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-lg);
+            color: var(--color-primary);
+            font-size: 32px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .card-description {
+            color: var(--color-muted);
+            line-height: 1.6;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .card-states {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .state-badge {
+            display: inline-block;
+            background: var(--color-primary-50);
+            color: var(--color-primary-dark);
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        .card-action {
+            text-decoration: none;
+            background: var(--color-primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--duration-normal) ease;
+        }
+
+        .card-action:hover {
+            background: var(--color-primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .status-indicator {
+            position: absolute;
+            top: var(--spacing-lg);
+            right: var(--spacing-lg);
+            width: 12px;
+            height: 12px;
+            border-radius: var(--radius-full);
+            border: 2px solid white;
+        }
+
+        .status-completed {
+            background: var(--color-primary);
+            box-shadow: 0 0 0 2px var(--color-primary-50);
+        }
+
+        .status-in-progress {
+            background: #f59e0b;
+            box-shadow: 0 0 0 2px #fef3c7;
+        }
+
+        .status-pending {
+            background: var(--color-muted);
+            box-shadow: 0 0 0 2px var(--color-surface);
+        }
+
+        .info-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            border: 1px solid var(--color-border);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .info-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-primary-dark);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            color: var(--color-text);
+            line-height: 1.5;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            color: var(--color-primary);
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .url-examples {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+
+        .url-examples h4 {
+            margin: 0 0 var(--spacing-md) 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .url-list {
+            font-family: var(--font-family-mono);
+            font-size: 12px;
+            color: var(--color-muted);
+            line-height: 1.4;
+        }
+
+        .url-list div {
+            margin-bottom: 4px;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: var(--spacing-lg);
+        }
+
+        .tech-badge {
+            background: var(--color-primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--color-muted);
+            font-size: 12px;
+            padding: var(--spacing-xl) 0;
+            border-top: 1px solid var(--color-border);
+            margin-top: var(--spacing-xxl);
+        }
+
+        @media (max-width: 768px) {
+            .prototype-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-lg);
+            }
+            
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="nav-header">
+            <h1 class="nav-title">
+                <i class="fab fa-whatsapp" style="color: var(--color-primary); margin-right: 12px;"></i>
+                WhatsApp抽奖活动系统
+            </h1>
+            <p class="nav-subtitle">高保真原型展示 - 基于requirements.md用户故事</p>
+        </header>
+
+        <!-- 原型导航 -->
+        <section class="info-section">
+            <h2 class="info-title">
+                <i class="fas fa-rocket" style="margin-right: 8px;"></i>
+                原型展示
+            </h2>
+            <div class="prototype-grid">
+                <!-- P1 落地页原型 -->
+                <div class="prototype-card">
+                    <div class="status-indicator status-completed" title="已完成"></div>
+                    <div class="card-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3 class="card-title">P1: 落地页原型</h3>
+                    <p class="card-description">
+                        流量入口页面，包含Hero Banner、跑马灯、奖品展示、CTA区域等核心组件
+                    </p>
+                    <div class="card-states">
+                        <span class="state-badge">S1.1 默认状态</span>
+                        <span class="state-badge">S1.2 邀请状态</span>
+                        <span class="state-badge">S1.3 结束状态</span>
+                    </div>
+                    <a href="./p1-landing-page.html" class="card-action" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                        查看原型
+                    </a>
+                </div>
+
+                <!-- P2 活动主页原型 -->
+                <div class="prototype-card">
+                    <div class="status-indicator status-pending" title="待开发"></div>
+                    <div class="card-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3 class="card-title">P2: 活动主页原型</h3>
+                    <p class="card-description">
+                        用户个人中心，展示抽奖码状态、邀请功能、开奖结果等
+                    </p>
+                    <div class="card-states">
+                        <span class="state-badge">S2.0 欢迎状态</span>
+                        <span class="state-badge">S2.1 常规状态</span>
+                        <span class="state-badge">S2.2 中奖状态</span>
+                        <span class="state-badge">S2.3 未中奖状态</span>
+                    </div>
+                    <a href="#" class="card-action" style="background: var(--color-muted); cursor: not-allowed;">
+                        <i class="fas fa-clock"></i>
+                        开发中...
+                    </a>
+                </div>
+
+                <!-- P3 兑奖页原型 -->
+                <div class="prototype-card">
+                    <div class="status-indicator status-pending" title="待开发"></div>
+                    <div class="card-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h3 class="card-title">P3: 兑奖页原型</h3>
+                    <p class="card-description">
+                        中奖用户兑奖流程，支持三种兑奖方式：表单、虚拟码、WhatsApp客服
+                    </p>
+                    <div class="card-states">
+                        <span class="state-badge">S3.1 实物兑奖</span>
+                        <span class="state-badge">S3.2 虚拟兑奖</span>
+                        <span class="state-badge">S3.3-S3.6 其他状态</span>
+                    </div>
+                    <a href="#" class="card-action" style="background: var(--color-muted); cursor: not-allowed;">
+                        <i class="fas fa-clock"></i>
+                        开发中...
+                    </a>
+                </div>
+
+                <!-- 管理后台原型 -->
+                <div class="prototype-card">
+                    <div class="status-indicator status-pending" title="待开发"></div>
+                    <div class="card-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="card-title">管理后台原型</h3>
+                    <p class="card-description">
+                        商家配置界面，包含活动设置、Google头像管理、WhatsApp集成等
+                    </p>
+                    <div class="card-states">
+                        <span class="state-badge">活动配置</span>
+                        <span class="state-badge">头像管理</span>
+                        <span class="state-badge">WhatsApp集成</span>
+                    </div>
+                    <a href="#" class="card-action" style="background: var(--color-muted); cursor: not-allowed;">
+                        <i class="fas fa-clock"></i>
+                        开发中...
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 核心特性 -->
+        <section class="info-section">
+            <h2 class="info-title">
+                <i class="fas fa-star" style="margin-right: 8px;"></i>
+                核心特性实现
+            </h2>
+            <ul class="feature-list">
+                <li>Google头像显示策略（优先级：Google > DiceBear > 虚拟）</li>
+                <li>利他分享心理学设计（"送好友抽奖码"文案）</li>
+                <li>分等级中奖者公示（一二三等奖透明展示）</li>
+                <li>三种兑奖方式支持（表单/虚拟兑换码/WhatsApp客服）</li>
+                <li>常驻客服支持（关键流程WhatsApp客服联系）</li>
+                <li>Token透明展示（兑奖验证码显示和复制）</li>
+                <li>实时数据模拟（跑马灯、参与人数、倒计时）</li>
+                <li>完整的页面状态管理（13个状态覆盖）</li>
+                <li>WhatsApp官方设计风格（#25D366色彩系统）</li>
+                <li>320px-1920px完美响应式适配</li>
+                <li>基于Design_Spec_A3.md的设计系统</li>
+                <li>uiverse.io风格微交互动效</li>
+            </ul>
+        </section>
+
+        <!-- 测试说明 -->
+        <section class="info-section">
+            <h2 class="info-title">
+                <i class="fas fa-vial" style="margin-right: 8px;"></i>
+                测试说明
+            </h2>
+            <p>P1落地页支持三种状态测试，通过URL参数切换：</p>
+            
+            <div class="url-examples">
+                <h4>测试URL示例：</h4>
+                <div class="url-list">
+                    <div><strong>默认状态 (S1.1):</strong> p1-landing-page.html</div>
+                    <div><strong>邀请状态 (S1.2):</strong> p1-landing-page.html?ref=user_001&inviter=张明</div>
+                    <div><strong>结束状态 (S1.3):</strong> p1-landing-page.html?status=ended</div>
+                </div>
+            </div>
+
+            <div style="margin-top: var(--spacing-lg); padding: var(--spacing-lg); background: var(--color-primary-50); border-radius: var(--radius-md); border-left: 4px solid var(--color-primary);">
+                <h4 style="margin: 0 0 8px 0; color: var(--color-primary-dark);">
+                    <i class="fas fa-lightbulb" style="margin-right: 6px;"></i>
+                    验收标准检查
+                </h4>
+                <p style="margin: 0; color: var(--color-text); line-height: 1.5;">
+                    所有原型都严格按照requirements.md中的用户故事验收标准开发，包含Google头像策略、利他分享设计、透明度体现等核心功能。
+                </p>
+            </div>
+        </section>
+
+        <!-- 技术栈 -->
+        <section class="info-section">
+            <h2 class="info-title">
+                <i class="fas fa-code" style="margin-right: 8px;"></i>
+                技术实现
+            </h2>
+            <p>基于Design_Spec_A3.md的设计令牌系统和组件库：</p>
+            <div class="tech-stack">
+                <span class="tech-badge">HTML5 语义化</span>
+                <span class="tech-badge">CSS Grid & Flexbox</span>
+                <span class="tech-badge">CSS变量系统</span>
+                <span class="tech-badge">JavaScript ES6+</span>
+                <span class="tech-badge">响应式设计</span>
+                <span class="tech-badge">WCAG可访问性</span>
+                <span class="tech-badge">数据模拟器</span>
+                <span class="tech-badge">状态管理</span>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div>
+                <i class="fas fa-heart" style="color: var(--color-primary); margin: 0 4px;"></i>
+                基于Stage3_Prototype_Development.md执行规格开发
+            </div>
+            <div style="margin-top: 4px;">
+                严格遵循Design_Spec_A3.md设计系统 | WhatsApp官方专业型风格
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 简单的交互增强
+        document.addEventListener('DOMContentLoaded', function() {
+            // 卡片悬停效果增强
+            const cards = document.querySelectorAll('.prototype-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(-4px) scale(1)';
+                });
+            });
+
+            // 状态指示器动画
+            const completedIndicators = document.querySelectorAll('.status-completed');
+            completedIndicators.forEach(indicator => {
+                setInterval(() => {
+                    indicator.style.animation = 'pulse 2s infinite';
+                }, 3000);
+            });
+
+            console.log('原型导航页面已加载');
+            console.log('当前完成进度: P1落地页原型 ✅');
+        });
+
+        // 添加脉冲动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7), 0 0 0 2px var(--color-primary-50); }
+                70% { box-shadow: 0 0 0 6px rgba(37, 211, 102, 0), 0 0 0 2px var(--color-primary-50); }
+                100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0), 0 0 0 2px var(--color-primary-50); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

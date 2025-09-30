@@ -13,16 +13,14 @@
 基于已完成的需求规格和用户流程分析，系统划分为以下8个核心功能模块：
 
 ### **模块1: 用户认证与激活模块 (User Authentication & Activation)**
-**核心职责**: 处理双重验证流程（Google登录 + WhatsApp验证）
+**核心职责**: 处理WhatsApp验证与会话激活
 **主要功能**:
-- Google OAuth 2.0一键登录集成
 - SESSION_ID生成和管理  
 - WhatsApp预填消息跳转
-- 用户身份绑定（Google信息 + WhatsApp手机号）
+- 用户身份绑定（WhatsApp手机号）
 - 激活状态实时监听
 
 **关键技术组件**:
-- GoogleAuthService
 - SessionManager  
 - WhatsAppIntegration
 - UserActivationHandler
@@ -32,10 +30,9 @@
 ### **模块2: 用户信息与头像管理模块 (User Profile & Avatar Management)**
 **核心职责**: 管理用户信息和头像显示策略
 **主要功能**:
-- Google用户信息存储（头像、姓名、邮箱、ID）
 - DiceBear头像生成API集成（降级方案）
 - 虚拟用户头像库管理
-- 头像显示优先级策略（Google头像 > DiceBear > 虚拟头像）
+- 头像显示优先级策略（DiceBear > 虚拟头像 > 默认头像）
 - 跑马灯头像统一风格管理（32px圆形）
 
 **关键技术组件**:
@@ -67,7 +64,7 @@
 ### **模块4: 病毒式邀请与传播模块 (Viral Invitation & Propagation)**
 **核心职责**: 处理邀请链接生成和病毒传播机制
 **主要功能**:
-- 专属邀请链接生成（包含ref_id和Google昵称）
+- 专属邀请链接生成（包含ref_id和昵称）
 - 一键WhatsApp分享功能（群组/个人联系人）
 - 邀请关系追踪和管理
 - 利他分享心理学应用（常驻CTA/Toast设计）
@@ -225,17 +222,16 @@ graph TD
 
 ### **高风险技术难点** 🔴
 
-#### **难点1: Google OAuth + WhatsApp双重验证集成**
+#### **难点1: WhatsApp验证流程可靠性**
 **风险等级**: 高  
 **技术挑战**:
-- Google OAuth 2.0在移动端H5的兼容性问题
 - WhatsApp URL Scheme的跨平台一致性
-- 双重验证流程的异常情况处理
+- 验证流程的异常情况处理
 - 用户流程中断后的状态恢复
 
 **风险缓解**:
 - 充分的移动端浏览器兼容性测试
-- 备用方案：简化为单一验证方式
+- 备用方案：提供重试与兜底文案
 - 完善的错误处理和重试机制
 
 #### **难点2: 多商家SaaS架构的数据隔离**
@@ -287,8 +283,7 @@ graph TD
 - 虚拟头像库的管理复杂性
 - 跑马灯头像的流畅显示
 
-**风险缓解**:
-- 多级降级：Google → DiceBear → 虚拟 → 默认
+- 多级降级：DiceBear → 虚拟 → 默认
 - 头像预加载和缓存策略
 - 虚拟头像的批量管理工具
 
